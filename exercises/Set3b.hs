@@ -56,6 +56,12 @@ sums' :: Int -> Int -> Int -> [Int]
 sums' i 1 accu = [i+accu]
 sums' i curr accu = (i - curr + accu+1) : sums' i (curr-1) (i - curr + accu+1)
 
+-- OFFICIAL IMPLEMENTATION
+-- sums i = go 0 1
+--     where go sum j
+--             | j>i = []
+--             | otherwise = (sum+j) : go  (sum+j) (j+1)
+
 ------------------------------------------------------------------------------
 -- Ex 3: define a function mylast that returns the last value of the
 -- given list. For an empty list, a provided default value is
@@ -204,3 +210,8 @@ maybeMap f (x:xs) = maybeMap' f xs (f x)
 maybeMap' :: (a -> Maybe b) -> [a] -> Maybe b -> [b]
 maybeMap' f xs Nothing  = maybeMap f xs
 maybeMap' f xs (Just a) = a : maybeMap f xs
+
+-- OFFICIAL IMPLEMENTATION
+-- maybeMap f []     = []    
+-- maybeMap f (x:xs) = case f x of Just y  -> y : maybeMap f x
+--                                 Nothing -> maybeMap f xs
