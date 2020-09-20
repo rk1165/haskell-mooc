@@ -84,6 +84,9 @@ firstHalf x
     | even (length x) = take (length x `div` 2) x
     | otherwise = take ((length x `div` 2) + 1) x
 
+-- OFFICIAL IMPLEMENTATION
+-- firstHalf x = take ((length x + 1) `div` 2) x
+
 palindrome :: String -> Bool
 palindrome x = x == reverse x
 
@@ -108,6 +111,10 @@ capitalize string = unwords (map capitalizeFirst (words string))
 capitalizeFirst :: String -> String
 capitalizeFirst word = toUpper (head word) : [] ++ (tail word)
 
+-- OFFICIAL IMPLEMENTATION
+-- capitalize = unwords . map capitalizeFirst . words
+--     where capitalizeFirst (c:cs) = toUpper c : cs
+
 ------------------------------------------------------------------------------
 -- Ex 6: powers k max should return all the powers of k that are less
 -- than or equal to max. For example:
@@ -129,6 +136,9 @@ powers' :: Int -> Int -> [Int] -> Int -> [Int]
 powers' k max list curr 
     | k^curr <= max = powers' k max (k^curr : list) (curr+1)
     | otherwise = list
+
+-- OFFICIAL IMPLEMENTATION
+-- powers k max = takeWhile (<=max) $ map (k^) [0..max]
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a functional while loop. While should be a function
@@ -178,6 +188,10 @@ whileRight' :: (a -> Either b a) -> (Either b a) -> b
 whileRight' f (Left a) = a
 whileRight' f (Right b) = whileRight f b
 
+-- OFFICIAL IMPLEMENTATION
+-- whileRight f x = case f x of Left y   -> y
+--                              Right x' -> whileRight f x'
+
 -- for the whileRight examples:
 -- step k x doubles x if it's less than k
 step :: Int -> Int -> Either Int Int
@@ -196,6 +210,9 @@ step k x = if x<k then Right (2*x) else Left x
 
 joinToLength :: Int -> [String] -> [String]
 joinToLength len list = filter (\x -> length x == len) [first ++ last | first <- list, last <- list]
+
+-- OFFICIAL IMPLEMENTATION
+-- joinToLength i xs = [z | x <- xs, y <- xs, let z = x++y, length z == i]
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the operator +|+ that returns a list with the first
@@ -216,6 +233,9 @@ joinToLength len list = filter (\x -> length x == len) [first ++ last | first <-
     | null l2 = head l1 : []
     | otherwise = head l1 : head l2 : []
 
+-- OFFICIAL IMPLEMENTATION
+-- xs +|+ ys = take 1 xs ++ take 1 ys
+
 ------------------------------------------------------------------------------
 -- Ex 11: remember the lectureParticipants example from Lecture 2? We
 -- used a value of type [Either String Int] to store some measurements
@@ -232,6 +252,9 @@ joinToLength len list = filter (\x -> length x == len) [first ++ last | first <-
 
 sumRights :: [Either a Int] -> Int
 sumRights list = sum (map (either (\x -> 0) (*1)) list)
+
+-- OFFICIAL IMPLEMENTATION
+-- sumRights = sum . map (either (const 0) id)
 
 ------------------------------------------------------------------------------
 -- Ex 12: recall the binary function composition operation
@@ -250,6 +273,9 @@ sumRights list = sum (map (either (\x -> 0) (*1)) list)
 multiCompose :: [a -> a] -> a -> a
 multiCompose [] x = x
 multiCompose (f : fs) x = f (multiCompose fs x)
+
+-- OFFICIAL IMPLEMENTATION
+-- multiCompose = foldr (.) id
 
 ------------------------------------------------------------------------------
 -- Ex 13: let's consider another way to compose multiple functions. Given
@@ -270,6 +296,9 @@ multiCompose (f : fs) x = f (multiCompose fs x)
 
 multiApp :: ([a] -> b) -> [c -> a] -> c -> b
 multiApp f gs x = f [g x | g <- gs]
+
+-- OFFICIAL IMPLEMENTATION (Challenge)
+-- multiApp f gs x = f $ (map ($x) gs)
 
 ------------------------------------------------------------------------------
 -- Ex 14: in this exercise you get to implement an interpreter for a
