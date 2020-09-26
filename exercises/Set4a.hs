@@ -41,6 +41,10 @@ allEqual (x1:x2:xs)
     | x1 /= x2 = False
     | otherwise = allEqual (x2:xs)
 
+-- OFFICIAL IMPLEMENTATION
+-- allEqual [] = True
+-- allEqual (x:xs) = all (==x) xs
+
 ------------------------------------------------------------------------------
 -- Ex 2: implement the function distinct which returns True if all
 -- values in a list are different.
@@ -62,6 +66,9 @@ distinct' (x1:x2:xs)
     | x1 == x2 = False
     | otherwise = distinct' (x2:xs)
 
+-- OFFICIAL IMPLEMENTATION
+-- distinct xs = xs == nub xs
+
 ------------------------------------------------------------------------------
 -- Ex 3: implement the function middle that returns the middle value
 -- (not the smallest or the largest) out of its three arguments.
@@ -78,6 +85,9 @@ middle x y z
     | x == max (max x y) z = max y z
     | y == max (max x y) z = max x z
     | otherwise      = max x y
+
+-- OFFICIAL IMPLEMENTATION
+-- middle x y z = sort [x,y,z] !! 1
 
 ------------------------------------------------------------------------------
 -- Ex 4: return the range of an input list, that is, the difference
@@ -96,6 +106,9 @@ rangeOf :: (Ord a, Num a) => [a] -> a
 rangeOf xs = maximum - minimum 
     where maximum = foldr max (head xs) xs
           minimum = foldr min (head xs) xs
+
+-- OFFICIAL IMPLEMENTATION
+-- rangeOf xs = maximum xs - minimum xs          
 
 ------------------------------------------------------------------------------
 -- Ex 5: given a list of lists, return the longest list. If there
@@ -125,6 +138,9 @@ cmprng f x y
 longest :: (Ord a) => [[a]] -> [a]
 longest xs = head $ sortBy (cmprng length) xs
 
+-- OFFICIAL IMPLEMENTATION
+-- longest = last . sortBy (comparing length) . reverse . sortBy (comparing head)
+
 ------------------------------------------------------------------------------
 -- Ex 6: Implement the function incrementKey, that takes a list of
 -- (key,value) pairs, and adds 1 to all the values that have the given key.
@@ -145,6 +161,13 @@ incrementKey key (x:xs)
     | key == fst x = (key, snd x + 1) : incrementKey key xs
     | otherwise = x : incrementKey key xs
 
+-- OFFICIAL IMPLEMENTATION
+-- incrementKey k kvs = map incr kvs
+--     where incr (k', v)
+--             | k' == k = (k', v+1)
+--             | otherwise = (k', v)
+
+
 ------------------------------------------------------------------------------
 -- Ex 7: compute the average of a list of values of the Fractional
 -- class.
@@ -161,6 +184,9 @@ average :: Fractional a => [a] -> a
 average xs = total / len 
     where total = foldr (+) 0 xs
           len   = fromIntegral (length xs)
+
+-- OFFICIAL IMPLEMENTATION
+-- average xs = sum xs / fromIntegral (length xs)
 
 ------------------------------------------------------------------------------
 -- Ex 8: given a map from player name to score and two players, return
@@ -183,6 +209,12 @@ winner scores player1 player2
     | Map.findWithDefault 0 player1 scores < Map.findWithDefault 0 player2 scores = player2
     | otherwise = player1
 
+-- OFFICIAL IMPLEMENTATION
+-- winner scores player1 player2
+--     | score player2 > score player1 = player2
+--     | otherwise = player1
+--     where score p = Map.findWithDefault 0 p scores
+
 ------------------------------------------------------------------------------
 -- Ex 9: compute how many times each value in the list occurs. Return
 -- the frequencies as a Map from value to Int.
@@ -197,6 +229,16 @@ winner scores player1 player2
 
 freqs :: (Eq a, Ord a) => [a] -> Map.Map a Int
 freqs xs = foldr (\x mp -> Map.insertWith (+) x 1 mp) Map.empty xs
+
+-- OFFICIAL IMPLEMENTATION
+-- freqs [] = Map.empty
+-- freqs (x:xs) = Map.alter inc x rest
+--     where rest = freqs xs
+--         inc Nothing = Just 1
+--         inc (Just n) = Just (n+1)
+
+-- Answer to challenges
+-- freqs = foldr (Map.alter $ Just . maybe 1 (+1)) Map.empty
 
 ------------------------------------------------------------------------------
 -- Ex 10: recall the withdraw example from the course material. Write a
@@ -231,6 +273,13 @@ transfer from to amount bank
     | Map.member from bank && Map.findWithDefault 0 from bank < amount = bank
     | otherwise = Map.adjust (\x -> x-amount) from $ (Map.adjust (\x -> x+amount) to bank)
 
+-- OFFICIAL IMPLEMENTATION
+-- transfer from to amount bank =
+--     case (Map.lookup from bank, Map.lookup to bank) of
+--         (Just fromBalance, Just toBalance)
+--             | amount >= 0 && fromBalance >= amount -> Map.adjust (+amount) to (Map.adjust (\x -> x-amount) from bank)
+--             _ -> bank
+
 ------------------------------------------------------------------------------
 -- Ex 11: given an Array and two indices, swap the elements in the indices.
 --
@@ -251,3 +300,7 @@ swap i j arr = arr // [(i, arr ! j), (j, arr ! i)]
 
 maxIndex :: (Ix i, Ord a) => Array i a -> i
 maxIndex arr = fst $ foldr (\x y -> if (snd x > snd y) then x else y) (head (assocs arr)) (assocs arr)
+
+-- OFFICIAL IMPLEMENTATION
+-- maxIndex arr = index
+--     where (index, _) = maximumBy (\(_,x) (_,y) -> compare x y) (assocs arr)
